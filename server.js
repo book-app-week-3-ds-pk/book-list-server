@@ -34,25 +34,24 @@ app.get('/api/v1/books', (req, res) => {
 
 app.get('/api/v1/books/:id', (req, res) => {
   client.query(
-    `SELECT book_id, title, author, image_url, description
-      FROM books;`)
-    .then(results => res.send(results.rows))
+    `SELECT * FROM books WHERE book_id=${req.params.id}`)
+    .then(result => res.send(result.rows))
     .catch(console.error);
 });
 
 app.post('/api/v1/books', (req, res) => {
   client.query(
-    `INSERT INTO books(title, author, isbn, image_url, description)
+    `INSERT INTO books(title, author, isbn, :image_url", description)
     VALUES ($1, $2, $3, $4, $5) ON CONFLICT DO NOTHING;`, [
-      request.body.title,
-      request.body.author,
-      request.body.isbn,
-      request.body.image_url,
-      request.body.description
+      req.body.title,
+      req.body.author,
+      req.body.isbn,
+      req.body.image_url,
+      req.body.description
     ]
   )
     .then(function() {
-      response.send('insert complete')
+      res.send('insert complete')
     })
     .catch(console.error);
 })
